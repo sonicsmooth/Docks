@@ -2,8 +2,8 @@
   (:require [clojure.java.io :as io]
             [docks.core :as docks]
             [jfxutils.core :refer [add-children! event-handler jfxnew
-                                   run-now set-items! set-list!
-                                   set-menus!]])
+                                   run-now run-later set-items! set-list!
+                                   set-menus! stage]])
   (:import (javafx.application Application)
            (javafx.scene Scene)
            (javafx.scene.control Label Menu MenuBar MenuItem Tab
@@ -26,14 +26,9 @@
     tree-view))
 
 
-(defn -start [primary-stage]
-  (let [ds :DockFX]
-    (.setTitle primary-stage (name ds))
-;;    (docks/set-docking-system! ds)
-    )
-
+(defn -start []
   (let [tabs (TabPane.)
-        html-editor (javafx.scene.web.HTMLEditor.)
+        html-editor (run-now (javafx.scene.web.HTMLEditor.))
         table-view (TableView.)
         dock-image (Image. (.toExternalForm (io/resource "docknode.png")))
         new-text-node (fn [num] (docks/node (TextArea. (slurp "loremipsum.txt"))
@@ -48,45 +43,39 @@
                                    :right tn1
                                    :bottom tv)]
     (.setPrefSize center-base 300 600)
-    ;;(.setPrefSize tn1 10 60)
-    ;;(.setPrefSize tn2 10 60)
     (.setPrefSize tv 300 100)
 
 
     (set-list! tabs :tabs [(Tab. "Tab1" html-editor) (Tab. "Tab2") (Tab. "Tab3")])
     (set-list! table-view :columns (map #(TableColumn. %) ["A" "B" "C"]))
 
-    (try (.setHtmlText html-editor (slurp "readme.html"))
-         (catch java.io.IOException e
-           (.printStackTrace e)))
     
-    (.setScene primary-stage
-               (Scene.
-                (jfxnew BorderPane
-                        :center root-dock-pane
-                        :bottom (Label. "Bottom")
-                        :top (jfxnew MenuBar :menus
-                                     [(jfxnew Menu "File" :items
-                                              [(jfxnew MenuItem "New Tab"
-                                                       :on-action (event-handler [e] (docks/dock (new-text-node 0) edit-base :center)))])
-                                      (jfxnew Menu "Edit")] ))
-                ;;1280 600
-                ))
-
-    (.show primary-stage)
-    (Application/setUserAgentStylesheet Application/STYLESHEET_MODENA)
-    (docks/init-style)))
+    (let [st (stage (jfxnew BorderPane
+                            :center root-dock-pane
+                            :bottom (Label. "Bottom")
+                            :top
+                            (jfxnew MenuBar :menus
+                                    [(jfxnew Menu "File" :items
+                                             [(jfxnew MenuItem "New Tab"
+                                                      :on-action (event-handler [e] (docks/dock (new-text-node 0) edit-base :center)))])
+                                     (jfxnew Menu "Edit")] )) )]
+      (run-now (.setTitle st (name :DockFX))
+               (try (.setHtmlText html-editor (slurp "readme.html"))
+                    (catch java.io.IOException e
+                      (.printStackTrace e)))
+               (Application/setUserAgentStylesheet Application/STYLESHEET_MODENA)
+               (docks/init-style)))))
 
 
 
 
 (defn main []
   (jfxutils.core/app-init)
-  (run-now (-start (Stage.))))
+  (-start))
 
 (defn -main []
   (jfxutils.core/app-init)
-  (run-now (-start (Stage.))))
+  (-start))
 
 
 
