@@ -1,19 +1,18 @@
 (ns docks.demo
-  (:gen-class)
-  (:use [jfxutils.core :exclude [-main]])
-  (:require [docks.core :as docks]
-            [clojure.java.io :as io])
-  (:import [java.io.IOException]
-           [java.nio.file Files Paths]
-           [javafx.application Application]
-           [javafx.scene Scene]
-           [javafx.scene.control
-            Tab TabPane TableColumn TableView TreeItem TreeView Label TextArea
-            MenuBar Menu MenuItem]
-           [javafx.scene.image Image ImageView]
-           [javafx.scene.layout BorderPane]
-           [javafx.scene.web.HTMLEditor]
-           [javafx.stage Stage]))
+  (:require [clojure.java.io :as io]
+            [docks.core :as docks]
+            [jfxutils.core :refer [add-children! event-handler jfxnew
+                                   run-now set-items! set-list!
+                                   set-menus!]])
+  (:import (javafx.application Application)
+           (javafx.scene Scene)
+           (javafx.scene.control Label Menu MenuBar MenuItem Tab
+                                 TabPane TableColumn TableView TextArea
+                                 TreeItem TreeView)
+           (javafx.scene.image Image)
+           (javafx.scene.layout BorderPane)
+           (javafx.stage Stage))
+  (:gen-class))
 
 (defn generate-random-tree []
   (let [root (TreeItem.)
@@ -30,7 +29,8 @@
 (defn -start [primary-stage]
   (let [ds :DockFX]
     (.setTitle primary-stage (name ds))
-    (docks/set-docking-system! ds))
+;;    (docks/set-docking-system! ds)
+    )
 
   (let [tabs (TabPane.)
         html-editor (javafx.scene.web.HTMLEditor.)
