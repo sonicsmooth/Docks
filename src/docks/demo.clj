@@ -30,7 +30,7 @@
   (let [tabs (TabPane.)
         html-editor (run-now (javafx.scene.web.HTMLEditor.))
         table-view (TableView.)
-        dock-image (Image. (.toExternalForm (io/resource "docknode.png")))
+        dock-image (Image. (.toExternalForm (io/resource "dock_resources/docknode.png")))
         new-text-node (fn [num] (docks/node (TextArea. (slurp "loremipsum.txt"))
                                             (str "Text " num)))
         edit-base (docks/base :center (map new-text-node (range 3)))
@@ -53,12 +53,11 @@
     (let [st (stage (jfxnew BorderPane
                             :center root-dock-pane
                             :bottom (Label. "Bottom")
-                            :top
-                            (jfxnew MenuBar :menus
-                                    [(jfxnew Menu "File" :items
-                                             [(jfxnew MenuItem "New Tab"
-                                                      :on-action (event-handler [e] (docks/dock (new-text-node 0) edit-base :center)))])
-                                     (jfxnew Menu "Edit")] )) )]
+                            :top (jfxnew MenuBar
+                                         :menus [(jfxnew Menu "File"
+                                                         :items [(jfxnew MenuItem "New Tab"
+                                                                         :on-action (event-handler [e] (docks/dock (new-text-node 0) edit-base :center)))])
+                                                 (jfxnew Menu "Edit")] )) )]
       (run-now (.setTitle st (name :DockFX))
                (try (.setHtmlText html-editor (slurp "readme.html"))
                     (catch java.io.IOException e
