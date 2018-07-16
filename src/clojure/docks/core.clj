@@ -26,8 +26,7 @@
 
 (defn dock
   "Attach node n to base b at position poz with optional percentage
-  perc.  When using AnchorFX, b can be a BaseStation, an SubStation,
-  or another DockNode."
+  perc."
   [n b poz & [perc]]
   (.dock n b (pos poz)))
 

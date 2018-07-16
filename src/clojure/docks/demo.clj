@@ -30,7 +30,7 @@
   (let [tabs (TabPane.)
         html-editor (run-now (javafx.scene.web.HTMLEditor.))
         table-view (TableView.)
-        dock-image (Image. (.toExternalForm (io/resource "dock_resources/docknode.png")))
+        dock-image (Image. (.toExternalForm (io/resource "org/dockfx/demo/docknode.png")))
         new-text-node (fn [num] (docks/node (TextArea. (slurp "loremipsum.txt"))
                                             (str "Text " num)))
         edit-base (docks/base :center (map new-text-node (range 3)))
