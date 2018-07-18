@@ -10,10 +10,6 @@
    :left org.dockfx.DockPos/LEFT
    :right org.dockfx.DockPos/RIGHT})
 
-
-(defn- pos [p]
-  (DOCKFX-POS-MAP p))
-
 (defn node
   "Creates dock node in the current docking system.  contents is a
   javafx node.  title is a String.  icon is a javafx.scene.image.Image"
@@ -25,10 +21,9 @@
    (org.dockfx.DockNode. contents title (ImageView. icon)))) ;; ensure non-draggable
 
 (defn dock
-  "Attach node n to base b at position poz with optional percentage
-  perc."
+  "Attach node n to base b at position poz"
   [n b poz & [perc]]
-  (.dock n b (pos poz)))
+  (.dock n b (DOCKFX-POS-MAP poz)))
 
 (defn base
   "Creates a base aka docking station aka dock-pane in the current
